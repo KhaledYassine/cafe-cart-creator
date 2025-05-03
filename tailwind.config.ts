@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,12 +62,23 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				cafe: {
+					brown: '#8B4513',
+					cream: '#F5F5DC',
+					darkbrown: '#5D4037',
+					lightbrown: '#D7CCC8',
+					tan: '#D2B48C'
 				}
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)'
+			},
+			fontFamily: {
+				sans: ['Poppins', 'sans-serif'],
+				serif: ['Playfair Display', 'serif']
 			},
 			keyframes: {
 				'accordion-down': {
@@ -84,11 +96,29 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'cart-slide-in': {
+					from: {
+						transform: 'translateY(-100%)'
+					},
+					to: {
+						transform: 'translateY(0)'
+					}
+				},
+				'cart-slide-out': {
+					from: {
+						transform: 'translateY(0)'
+					},
+					to: {
+						transform: 'translateY(-100%)'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'cart-slide-in': 'cart-slide-in 0.3s ease-out',
+				'cart-slide-out': 'cart-slide-out 0.3s ease-out'
 			}
 		}
 	},
