@@ -13,7 +13,7 @@ interface MenuItemProps {
 const MenuItem = ({ item, addToCart }: MenuItemProps) => {
   return (
     <Card className="h-full flex flex-col overflow-hidden hover:shadow-md transition-shadow border-border/40">
-      <div className="relative h-48 overflow-hidden">
+      <div className="relative h-36 overflow-hidden">
         <img
           src={item.image}
           alt={item.name}
@@ -25,27 +25,21 @@ const MenuItem = ({ item, addToCart }: MenuItemProps) => {
           </Badge>
         </div>
       </div>
-      <CardHeader className="pb-2">
+      <CardHeader className="pb-1 pt-3">
         <div className="flex items-start justify-between">
           <CardTitle className="text-lg font-serif">{item.name}</CardTitle>
         </div>
-        <div className="flex flex-wrap gap-1 mt-1">
-          {item.tags.map((tag) => (
-            <Badge key={tag} variant="secondary" className="text-xs">
-              {tag}
-            </Badge>
-          ))}
-        </div>
       </CardHeader>
-      <CardContent className="flex-grow">
-        <CardDescription className="text-sm text-muted-foreground italic">
+      <CardContent className="flex-grow py-1">
+        <CardDescription className="text-sm text-muted-foreground">
           {item.description}
         </CardDescription>
       </CardContent>
-      <CardFooter className="pt-0">
+      <CardFooter className="pt-0 pb-3">
         <Button 
-          className="w-full gap-2 bg-primary/90 hover:bg-primary" 
+          className="w-full gap-2 bg-primary/90 hover:bg-primary text-sm" 
           onClick={() => addToCart(item)}
+          size="sm"
         >
           <ShoppingCart className="h-4 w-4" />
           Add to Cart
