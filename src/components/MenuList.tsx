@@ -6,6 +6,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { categories } from '@/data/menuData';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChevronDown } from "lucide-react";
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface MenuListProps {
   activeCategory: string;
@@ -17,6 +18,7 @@ const MenuList = ({
   addToCart
 }: MenuListProps) => {
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
+  const isMobile = useIsMobile();
   
   const filteredCategories = useMemo(() => {
     if (activeCategory === 'all') {
@@ -58,7 +60,7 @@ const MenuList = ({
             <p className="text-muted-foreground italic">No categories found.</p>
           </div>
         ) : (
-          <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredCategories.map(category => {
               const categoryItems = getItemsByCategory(category.id);
               if (categoryItems.length === 0) return null;
