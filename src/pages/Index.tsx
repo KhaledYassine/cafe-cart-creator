@@ -11,6 +11,8 @@ import { useToast } from '@/hooks/use-toast';
 
 const Index = () => {
   const [activeCategory, setActiveCategory] = useState('all');
+  const [activeCategories, setActiveCategories] = useState<string[]>([]);
+
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -31,12 +33,12 @@ const Index = () => {
   const addToCart = (item: MenuItem) => {
     setCartItems((prevItems) => {
       const existingItem = prevItems.find((cartItem) => cartItem.id === item.id);
-      
+
       if (existingItem) {
         // Item exists in cart, update quantity
         return prevItems.map((cartItem) =>
-          cartItem.id === item.id 
-            ? { ...cartItem, quantity: cartItem.quantity + 1 } 
+          cartItem.id === item.id
+            ? { ...cartItem, quantity: cartItem.quantity + 1 }
             : cartItem
         );
       } else {
@@ -55,7 +57,7 @@ const Index = () => {
       removeItem(id);
       return;
     }
-    
+
     setCartItems((prevItems) =>
       prevItems.map((item) =>
         item.id === id ? { ...item, quantity } : item
@@ -74,23 +76,26 @@ const Index = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Header cartItems={cartItems} toggleCart={toggleCart} />
-      
+
       <main className="flex-grow">
         <Hero scrollToMenu={scrollToMenu} />
-        
+
         <div ref={menuRef}>
-          <MenuCategories 
-            activeCategory={activeCategory} 
-            setActiveCategory={setActiveCategory}
+          <MenuCategories
+            activeCategories={activeCategories}
+            setActiveCategories={setActiveCategories}
           />
-          
+
+
           <MenuList
-            activeCategory={activeCategory}
+            activeCategories={activeCategories}
             addToCart={addToCart}
+            
           />
+
         </div>
       </main>
-      
+
       <Cart
         isOpen={isCartOpen}
         cartItems={cartItems}
@@ -99,14 +104,14 @@ const Index = () => {
         closeCart={closeCart}
         clearCart={clearCart}
       />
-      
+
       {isCartOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 z-40"
           onClick={closeCart}
         />
       )}
-      
+
       <Footer />
     </div>
   );

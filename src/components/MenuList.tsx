@@ -8,24 +8,28 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { ChevronDown } from "lucide-react";
 import { useIsMobile } from '@/hooks/use-mobile';
 
+
 interface MenuListProps {
-  activeCategory: string;
+  activeCategories: string[];
   addToCart: (item: MenuItemType) => void;
 }
 
-const MenuList = ({
-  activeCategory,
-  addToCart
-}: MenuListProps) => {
+
+  const MenuList = ({
+    activeCategories,
+    addToCart
+  }: MenuListProps) => {
+  
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
   const isMobile = useIsMobile();
   
   const filteredCategories = useMemo(() => {
-    if (activeCategory === 'all') {
+    if (activeCategories.length === 0) {
       return categories;
     }
-    return categories.filter(category => category.id === activeCategory);
-  }, [activeCategory]);
+    return categories.filter(category => activeCategories.includes(category.id));
+  }, [activeCategories]);
+  
   
   const getItemsByCategory = (categoryId: string) => {
     return menuItems.filter(item => item.category === categoryId);

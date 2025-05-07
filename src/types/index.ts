@@ -18,7 +18,7 @@ export interface Category {
   name: string;
 }
 
-export interface categorySections {
+export interface CategorySection {
   title: string;
-  ids: Category[];
+  ids: string[]; // Important: these are IDs (strings), not full `Category` objects
 }

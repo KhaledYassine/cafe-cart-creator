@@ -1,5 +1,6 @@
-import { Category, MenuItem } from '@/types';
-export const categorySections = [
+import { Category, MenuItem,CategorySection } from '@/types';
+export const categorySections: CategorySection[] = [
+
   {
     title: '🍰 Desserts & Sweet Treats',
     ids: [
