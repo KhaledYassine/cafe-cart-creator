@@ -35,7 +35,7 @@ const Header = ({ cartItems, toggleCart }: HeaderProps) => {
     >
       <div className="container flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <h1 className="text-2xl md:text-3xl font-serif font-bold text-cafe-brown">Café Delight</h1>
+          <h1 className="text-2xl md:text-3xl font-serif font-bold text-cafe-brown">JOE's CAFFÉ</h1>
         </div>
         <Button 
           variant="outline" 

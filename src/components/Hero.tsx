@@ -20,7 +20,7 @@ const Hero = ({ scrollToMenu }: HeroProps) => {
       <div className="container relative z-20">
         <div className="max-w-2xl text-white">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-4">
-            Welcome to Café Delight
+            Welcome to Joe's Caffé
           </h1>
           <p className="text-lg md:text-xl opacity-90 mb-8">
             Experience the perfect blend of flavor and ambiance. Our artisanal coffee and delicious menu items are crafted with passion.
