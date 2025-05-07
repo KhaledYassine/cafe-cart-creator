@@ -28,10 +28,10 @@ const MenuCategories = ({ activeCategory, setActiveCategory }: MenuCategoriesPro
   };
 
   return (
-    <section className="py-6">
+    <section className="py-6 bg-[#f8f5f0]">
       <div className="container px-4 mx-auto">
         <div className="text-center mb-6">
-          <h2 className="text-3xl font-serif font-medium mb-2">Joe's Café Menu</h2>
+          <h2 className="text-3xl font-serif font-medium mb-2 text-[#8B4513]">Joe's Café Menu</h2>
           <div className="w-24 h-1 mx-auto bg-primary rounded"></div>
         </div>
 
@@ -97,7 +97,7 @@ const MenuCategories = ({ activeCategory, setActiveCategory }: MenuCategoriesPro
             </DropdownMenu>
           </div>
 
-          {/* Show all categories on medium and larger screens */}
+          {/* Show all categories on medium and larger screens in a scrollable container */}
           <div className="hidden md:flex md:flex-wrap md:items-center md:justify-center md:gap-2 max-h-[300px] overflow-y-auto px-4">
             {categories.map((category) => (
               <Button
