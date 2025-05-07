@@ -66,23 +66,23 @@ const MenuList = ({
               if (categoryItems.length === 0) return null;
               
               return (
-                <div key={category.id} className="bg-card rounded-lg border shadow-sm overflow-hidden">
+                <div key={category.id} className="bg-card rounded-lg border shadow-sm overflow-hidden flex flex-col">
+                  {/* Image positioned at the top of the card */}
+                  <div className="w-full h-48 overflow-hidden">
+                    <img 
+                      src={getCategoryImage(category.id)} 
+                      alt={category.name} 
+                      className="w-full h-full object-cover" 
+                    />
+                  </div>
+                  
                   <Accordion type="single" collapsible defaultValue={expandedCategories.includes(category.id) ? category.id : undefined} onValueChange={value => {
                     if (value) handleToggle(category.id);
                     else handleToggle(category.id);
                   }}>
                     <AccordionItem value={category.id} className="border-none">
                       <AccordionTrigger className="px-6 py-4 hover:no-underline bg-secondary/20 rounded-none text-base font-normal">
-                        <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 rounded-md overflow-hidden shadow-sm flex-shrink-0">
-                            <img 
-                              src={getCategoryImage(category.id)} 
-                              alt={category.name} 
-                              className="w-full h-full object-cover" 
-                            />
-                          </div>
-                          <h3 className="text-xl font-serif font-medium text-left">{category.name}</h3>
-                        </div>
+                        <h3 className="text-xl font-serif font-medium text-left">{category.name}</h3>
                       </AccordionTrigger>
                       <AccordionContent>
                         <div className="divide-y divide-border/30">
