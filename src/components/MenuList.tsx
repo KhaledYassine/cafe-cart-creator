@@ -2,7 +2,6 @@
 import { useMemo, useState } from 'react';
 import { MenuItem as MenuItemType } from '@/types';
 import MenuItem from './MenuItem';
-import { menuItems } from '@/data/menuData';
 import { 
   Accordion, 
   AccordionContent, 
@@ -40,6 +39,17 @@ const MenuList = ({ activeCategory, addToCart }: MenuListProps) => {
     });
   };
 
+  // Get a representative image for each category
+  const getCategoryImage = (categoryId: string) => {
+    const items = menuItems.filter(item => item.category === categoryId);
+    if (items.length > 0) {
+      // Find first item with a valid image URL
+      const itemWithImage = items.find(item => item.image && !item.image.includes('placeholder'));
+      return itemWithImage?.image || 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3'; // Default coffee image
+    }
+    return 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3'; // Default coffee image
+  };
+
   return (
     <section className="py-8 bg-secondary/30">
       <div className="container px-4 mx-auto">
@@ -67,7 +77,16 @@ const MenuList = ({ activeCategory, addToCart }: MenuListProps) => {
                   >
                     <AccordionItem value={category.id} className="border-none">
                       <AccordionTrigger className="px-6 py-4 hover:no-underline bg-secondary/20">
-                        <h3 className="text-xl font-serif font-medium">{category.name}</h3>
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 rounded-md overflow-hidden shadow-sm flex-shrink-0">
+                            <img 
+                              src={getCategoryImage(category.id)} 
+                              alt={category.name} 
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          <h3 className="text-xl font-serif font-medium text-left">{category.name}</h3>
+                        </div>
                       </AccordionTrigger>
                       <AccordionContent>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
@@ -88,4 +107,5 @@ const MenuList = ({ activeCategory, addToCart }: MenuListProps) => {
   );
 };
 
+import { menuItems } from '@/data/menuData';
 export default MenuList;
