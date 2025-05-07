@@ -1,4 +1,33 @@
 import { Category, MenuItem } from '@/types';
+export const categorySections = [
+  {
+    title: '🍰 Desserts & Sweet Treats',
+    ids: [
+      'jwajem', 'cake', 'crepes-sucree', 'bubble-waffle', 'gaufre',
+      'gaufres-boules', 'pancake', 'crepe-kunafa', 'glace'
+    ]
+  },
+  {
+    title: '🍳 Savory Dishes',
+    ids: ['crepes-salee', 'omelette', 'panini']
+  },
+  {
+    title: '☕ Hot Drinks',
+    ids: ['chocolat-chaud', 'cappuccino', 'frappuccino', 'coffee', 'the']
+  },
+  {
+    title: '🧊 Cold Drinks',
+    ids: [
+      'ice-coffee', 'eau', 'smoothie', 'mocktail', 'jus',
+      'mojito', 'milkshake', 'boisson'
+    ]
+  },
+  {
+    title: '💨 Relax',
+    ids: ['chicha']
+  }
+];
+
 
 export const categories: Category[] = [
   { id: 'chocolat-chaud', name: '☕ CHOCOLAT CHAUD' },
