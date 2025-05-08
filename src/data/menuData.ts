@@ -730,8 +730,8 @@ export const menuItems: MenuItem[] = [
   tags: ['hookah', 'unique']
 },
 {
-  id: 'chicha-jbr',
-  name: 'Chicha jbr',
+  id: 'chicha-JB',
+  name: 'Chicha JBR',
   description: 'taste JBR flavor shisha',
   price: 5,
   image: 'https://post.medicalnewstoday.com/wp-content/uploads/sites/3/2023/04/vaping-anonymous-1296x728-header-1024x576.jpg',
