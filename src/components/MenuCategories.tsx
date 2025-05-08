@@ -4,8 +4,9 @@ import { categories, menuItems, categorySections } from '@/data/menuData';
 
 interface MenuCategoriesProps {
   activeCategories: string[];
-  setActiveCategories: (categories: string[]) => void;
+  setActiveCategories: React.Dispatch<React.SetStateAction<string[]>>;
 }
+
 
 const MenuCategories = ({ activeCategories, setActiveCategories }: MenuCategoriesProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);

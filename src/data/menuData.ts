@@ -707,7 +707,7 @@ export const menuItems: MenuItem[] = [
   name: 'Chicha Fakher',
   description: 'Traditional flavored shisha',
   price: 4.5,
-  image: 'https://placeholder-for-chicha-image.jpg',
+  image: 'https://post.medicalnewstoday.com/wp-content/uploads/sites/3/2023/04/vaping-anonymous-1296x728-header-1024x576.jpg',
   category: 'chicha',
   tags: ['hookah', 'flavored']
 },
@@ -792,7 +792,7 @@ export const menuItems: MenuItem[] = [
   name: 'Crêpe Jambon Fromage',
   description: 'Savory crepe with ham and cheese',
   price: 6.5,
-  image: 'https://placeholder-for-crepe-image.jpg',
+  image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQzPYpcP4AILqvrfkAFk5k0qCTmTmde18Gy3oZDB8UxF-wHFv_qxr80QsRYG_0HuRNq2M&usqp=CAU',
   category: 'crepes-salee',
   tags: ['savory', 'ham', 'cheese']
 },
@@ -830,7 +830,7 @@ export const menuItems: MenuItem[] = [
   name: 'Jambon',
   description: 'Omelette with ham',
   price: 5.5,
-  image: 'https://placeholder-for-omelette-image.jpg',
+  image: 'https://images.unsplash.com/photo-1646579933415-92109f9805df?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0',
   category: 'omelette',
   tags: ['egg', 'ham']
 },
@@ -859,7 +859,7 @@ export const menuItems: MenuItem[] = [
   name: 'Jambon',
   description: 'Panini with ham',
   price: 4.5,
-  image: 'https://placeholder-for-panini-image.jpg',
+  image: 'https://images.unsplash.com/photo-1621852004158-f3bc188ace2d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.',
   category: 'panini',
   tags: ['sandwich', 'ham']
 },
@@ -888,7 +888,7 @@ export const menuItems: MenuItem[] = [
   name: 'Canette',
   description: 'Soda can',
   price: 2.5,
-  image: 'https://placeholder-for-drink-image.jpg',
+  image: 'https://plus.unsplash.com/premium_photo-1681487655849-f25f861ff78b',
   category: 'boisson',
   tags: ['soda', 'cold']
 },
@@ -1002,7 +1002,7 @@ export const menuItems: MenuItem[] = [
   name: 'Chocolate (7 Boules)',
   description: '7 chocolate bubble waffle balls',
   price: 5.5,
-  image: 'https://placeholder-for-waffle-image.jpg',
+  image: 'IMG_20250507_162443.jpg',
   category: 'gaufres-boules',
   tags: ['waffle', 'chocolate', 'balls']
 },
@@ -1067,7 +1067,7 @@ export const menuItems: MenuItem[] = [
   name: 'Chocolat',
   description: 'Pancake with chocolate',
   price: 7.0,
-  image: 'https://placeholder-for-pancake-image.jpg',
+  image: 'https://images.unsplash.com/photo-1541288097308-7b8e3f58c4c6?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0',
   category: 'pancake',
   tags: ['pancake', 'chocolate']
 },
@@ -1114,7 +1114,7 @@ export const menuItems: MenuItem[] = [
   name: "Kunafa Joe's",
   description: 'Special kunafa crepe combination',
   price: 16.0,
-  image: 'https://placeholder-for-kunafa-image.jpg',
+  image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSP2_Q57ySBQ42eqRJP90aOii8yjBddy7cpg&s',
   category: 'crepe-kunafa',
   tags: ['kunafa', 'special', 'premium']
 },
@@ -1143,7 +1143,7 @@ export const menuItems: MenuItem[] = [
   name: 'Joe-mini',
   description: 'Mini jwajem special',
   price: 7.0,
-  image: 'https://placeholder-for-jwajem-image.jpg',
+  image: 'https://static.wixstatic.com/media/7302b9_80f53a41bcf94de8ae427a7abf6136b4~mv2.jpg/v1/fill/w_524,h_382,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/7302b9_80f53a41bcf94de8ae427a7abf6136b4~mv2.jpg',
   category: 'jwajem',
   tags: ['jwajem', 'mini']
 },
