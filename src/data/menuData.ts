@@ -729,6 +729,15 @@ export const menuItems: MenuItem[] = [
   category: 'chicha',
   tags: ['hookah', 'unique']
 },
+{
+  id: 'chicha-jbr',
+  name: 'Chicha jbr',
+  description: 'taste JBR flavor shisha',
+  price: 5,
+  image: 'https://post.medicalnewstoday.com/wp-content/uploads/sites/3/2023/04/vaping-anonymous-1296x728-header-1024x576.jpg',
+  category: 'chicha',
+  tags: ['hookah', 'flavored']
+},
 
 // CRÊPES SUCRÉE
 {
