@@ -1,17 +1,5 @@
 import { Category, MenuItem,CategorySection } from '@/types';
 export const categorySections: CategorySection[] = [
-
-  {
-    title: '🍰 Desserts & Sweet Treats',
-    ids: [
-      'jwajem', 'cake', 'crepes-sucree', 'bubble-waffle', 'gaufre',
-      'gaufres-boules', 'pancake', 'crepe-kunafa', 'glace'
-    ]
-  },
-  {
-    title: '🍳 Savory Dishes',
-    ids: ['crepes-salee', 'omelette', 'panini']
-  },
   {
     title: '☕ Hot Drinks',
     ids: ['chocolat-chaud', 'cappuccino', 'frappuccino', 'coffee', 'the']
@@ -24,6 +12,19 @@ export const categorySections: CategorySection[] = [
     ]
   },
   {
+    title: '🍰 Desserts & Sweet Treats',
+    ids: [
+      'jwajem', 'cake', 'crepes-sucree', 'bubble-waffle', 'gaufre',
+      'gaufres-boules', 'pancake', 'crepe-kunafa', 'glace'
+    ]
+  },
+  {
+    title: '🍳 Savory Dishes',
+    ids: ['crepes-salee', 'omelette', 'panini']
+  },
+
+
+  {
     title: '💨 Relax',
     ids: ['chicha']
   }
@@ -31,11 +32,12 @@ export const categorySections: CategorySection[] = [
 
 
 export const categories: Category[] = [
-  { id: 'chocolat-chaud', name: '☕ CHOCOLAT CHAUD' },
-  { id: 'cappuccino', name: '☕ CAPPUCCINO' },
-  { id: 'frappuccino', name: '☕ FRAPPUCCINO' },
   { id: 'coffee', name: '☕ COFFEE' },
+  { id: 'cappuccino', name: '☕ CAPPUCCINO' },
+  { id: 'chocolat-chaud', name: '☕ CHOCOLAT CHAUD' },
+  { id: 'frappuccino', name: '☕ FRAPPUCCINO' },
   { id: 'the', name: '🍵 THÉ' },
+  { id: 'boisson', name: '🥤 BOISSON GAZEUSE' },
   { id: 'eau', name: '💧 EAU' },
   { id: 'smoothie', name: '🍹 SMOOTHIE' },
   { id: 'mocktail', name: '🍸 MOCKTAIL' },
@@ -45,18 +47,18 @@ export const categories: Category[] = [
   { id: 'milkshake', name: '🥤 MILKSHAKE' },
   { id: 'glace', name: '🍨 GLACE' },
   { id: 'cake', name: '🍰 CAKE' },
-  { id: 'chicha', name: '💨 CHICHA' },
   { id: 'crepes-sucree', name: '🧇 CRÊPES SUCRÉE' },
-  { id: 'crepes-salee', name: '🥓 CRÊPES SALÉE' },
-  { id: 'omelette', name: '🍳 OMELETTE' },
-  { id: 'panini', name: '🥪 PANINI' },
-  { id: 'boisson', name: '🥤 BOISSON GAZEUSE' },
   { id: 'bubble-waffle', name: '🧇 BUBBLE WAFFLE' },
   { id: 'gaufre', name: '🧇 GAUFRE' },
   { id: 'gaufres-boules', name: '🍡 GAUFRES À BOULES' },
   { id: 'pancake', name: '🥞 PANCAKE' },
   { id: 'crepe-kunafa', name: '🔥 CRÊPE KUNAFA' },
   { id: 'jwajem', name: 'JWAJEM' },
+  { id: 'crepes-salee', name: '🥓 CRÊPES SALÉE' },
+  { id: 'omelette', name: '🍳 OMELETTE' },
+  { id: 'panini', name: '🥪 PANINI' },
+  { id: 'chicha', name: '💨 CHICHA' },
+
 ];
 
 export const menuItems: MenuItem[] = [
@@ -92,7 +94,7 @@ export const menuItems: MenuItem[] = [
   // CAPPUCCINO
   {
     id: 'cap-caramel',
-    name: 'Cappuccino Caramel',
+    name: 'Cappuccino Caramel',   
     description: 'Cappuccino with caramel flavor',
     price: 4.50,
     image: 'https://images.unsplash.com/photo-1534778101976-62847782c213?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
@@ -124,7 +126,7 @@ export const menuItems: MenuItem[] = [
     name: 'Frappuccino Caramel',
     description: 'Cold blended coffee with caramel',
     price: 6.50,
-    image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
+    image: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.1.0',
     category: 'frappuccino',
     tags: ['coffee', 'cold', 'caramel']
   },
@@ -180,7 +182,7 @@ export const menuItems: MenuItem[] = [
     name: 'Express',
     description: 'Strong espresso shot',
     price: 2.50,
-    image: 'https://images.unsplash.com/photo-1581996323777-d2dacb7c8f86?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
+    image: 'https://images.unsplash.com/photo-1497515114629-f71d768fd07c?q=80&w=2084&auto=format&fit=crop&ixlib=rb-4.1.0',
     category: 'coffee',
     tags: ['coffee', 'hot', 'espresso']
   },
@@ -301,7 +303,7 @@ export const menuItems: MenuItem[] = [
     name: 'Eau 0.5L',
     description: 'Bottled water 0.5 liter',
     price: 1.50,
-    image: 'https://images.unsplash.com/photo-1551269901-5c5e14c25df7?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
+    image: 'https://images.unsplash.com/photo-1711395472036-d3bf9eb4e04b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
     category: 'eau',
     tags: ['water', 'bottle']
   },
@@ -321,7 +323,7 @@ export const menuItems: MenuItem[] = [
     name: 'Smoothie Banane',
     description: 'Banana smoothie',
     price: 7.50,
-    image: 'https://images.unsplash.com/photo-1505576399279-565b52d4ac71?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
+    image: 'https://images.unsplash.com/photo-1657101455328-6821c90b0ad3?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
     category: 'smoothie',
     tags: ['smoothie', 'cold', 'banana']
   },
@@ -395,7 +397,7 @@ export const menuItems: MenuItem[] = [
     name: 'Mocktail Hawai',
     description: 'Hawaiian style mocktail',
     price: 8.00,
-    image: 'https://images.unsplash.com/photo-1551751299-1b51cab2694c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
+    image: 'https://mocktail.net/wp-content/uploads/2021/10/Blue-Mocktail-Recipe_2.jpg',
     category: 'mocktail',
     tags: ['mocktail', 'cold', 'fruit']
   },
@@ -424,7 +426,7 @@ export const menuItems: MenuItem[] = [
     name: 'Citron',
     description: 'Fresh lemon juice',
     price: 4.50,
-    image: 'https://images.unsplash.com/photo-1603569283847-aa295f0d016a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
+    image: 'https://images.unsplash.com/photo-1676159434937-c7b51a52ff5a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
     category: 'jus',
     tags: ['juice', 'cold', 'lemon']
   },
@@ -433,7 +435,7 @@ export const menuItems: MenuItem[] = [
     name: 'Orange',
     description: 'Fresh orange juice',
     price: 4.50,
-    image: 'https://images.unsplash.com/photo-1603569283847-aa295f0d016a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
+    image: 'https://images.unsplash.com/photo-1676159434937-c7b51a52ff5a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
     category: 'jus',
     tags: ['juice', 'cold', 'orange']
   },
@@ -442,7 +444,7 @@ export const menuItems: MenuItem[] = [
     name: 'Lait de Poule',
     description: 'Traditional egg-based drink',
     price: 6.00,
-    image: 'https://images.unsplash.com/photo-1603569283847-aa295f0d016a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
+    image: 'https://images.unsplash.com/photo-1676159434937-c7b51a52ff5a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
     category: 'jus',
     tags: ['juice', 'cold', 'traditional']
   },
@@ -451,7 +453,7 @@ export const menuItems: MenuItem[] = [
     name: 'Fraise',
     description: 'Strawberry juice',
     price: 6.00,
-    image: 'https://images.unsplash.com/photo-1603569283847-aa295f0d016a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
+    image: 'https://images.unsplash.com/photo-1676159434937-c7b51a52ff5a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
     category: 'jus',
     tags: ['juice', 'cold', 'strawberry']
   },
@@ -460,7 +462,7 @@ export const menuItems: MenuItem[] = [
     name: 'Fruit',
     description: 'Mixed fruit juice',
     price: 7.50,
-    image: 'https://images.unsplash.com/photo-1603569283847-aa295f0d016a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
+    image: 'https://images.unsplash.com/photo-1676159434937-c7b51a52ff5a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
     category: 'jus',
     tags: ['juice', 'cold', 'mixed']
   },
@@ -469,7 +471,7 @@ export const menuItems: MenuItem[] = [
     name: 'Fraise Banane',
     description: 'Strawberry banana juice',
     price: 7.50,
-    image: 'https://images.unsplash.com/photo-1603569283847-aa295f0d016a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
+    image: 'https://images.unsplash.com/photo-1676159434937-c7b51a52ff5a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
     category: 'jus',
     tags: ['juice', 'cold', 'strawberry', 'banana']
   },
@@ -478,7 +480,7 @@ export const menuItems: MenuItem[] = [
     name: 'Cocktail Joe',
     description: 'Special Joe\'s fruit cocktail',
     price: 9.50,
-    image: 'https://images.unsplash.com/photo-1603569283847-aa295f0d016a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
+    image: 'https://images.unsplash.com/photo-1676159434937-c7b51a52ff5a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
     category: 'jus',
     tags: ['juice', 'cold', 'special']
   },
@@ -489,7 +491,7 @@ export const menuItems: MenuItem[] = [
     name: 'Mojito Vergin',
     description: 'Virgin mojito',
     price: 6.00,
-    image: 'https://images.unsplash.com/photo-1516684732162-798a0062be99?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
+    image: 'https://images.unsplash.com/photo-1541745038731-f1c2b5a1a49e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
     category: 'mojito',
     tags: ['mojito', 'cold', 'virgin']
   },
@@ -527,7 +529,7 @@ export const menuItems: MenuItem[] = [
     name: 'Ice Coffee Caramel',
     description: 'Iced coffee with caramel',
     price: 6.00,
-    image: 'https://images.unsplash.com/photo-1568649929103-28ffbefaca1e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
+    image: 'https://images.unsplash.com/photo-1609250144044-6ac2689df83f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
     category: 'ice-coffee',
     tags: ['coffee', 'cold', 'caramel']
   },
@@ -667,7 +669,7 @@ export const menuItems: MenuItem[] = [
   name: "Joe's Cake",
   description: 'Delicious cake special',
   price: 4.0,
-  image: 'https://placeholder-for-cake-image.jpg',
+  image: 'https://images.unsplash.com/photo-1505253599537-305b179737ce?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
   category: 'cake',
   tags: ['dessert', 'sweet']
 },
@@ -734,7 +736,7 @@ export const menuItems: MenuItem[] = [
   name: 'Crêpe Chocolat',
   description: 'Sweet crepe with chocolate',
   price: 7.0,
-  image: 'https://placeholder-for-crepe-image.jpg',
+  image: 'https://images.coinafrique.com/3248803_uploaded_image1_1627473729.jpg',
   category: 'crepes-sucree',
   tags: ['sweet', 'chocolate']
 },
@@ -924,7 +926,7 @@ export const menuItems: MenuItem[] = [
   name: 'Miel',
   description: 'Bubble waffle with honey',
   price: 6.5,
-  image: 'https://placeholder-for-waffle-image.jpg',
+  image: 'https://images.pexels.com/photos/28263691/pexels-photo-28263691/free-photo-of-a-table-with-a-plate-of-food-and-a-cup-of-coffee.jpeg',
   category: 'bubble-waffle',
   tags: ['waffle', 'honey']
 },
@@ -962,7 +964,7 @@ export const menuItems: MenuItem[] = [
   name: 'Chocolat',
   description: 'Waffle with chocolate',
   price: 7.0,
-  image: 'https://placeholder-for-waffle-image.jpg',
+  image: 'https://cdn.pixabay.com/photo/2016/10/17/15/27/waffles-1747973_1280.jpg',
   category: 'gaufre',
   tags: ['waffle', 'chocolate']
 },
