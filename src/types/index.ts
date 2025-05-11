@@ -22,3 +22,20 @@ export interface CategorySection {
   title: string;
   ids: string[]; // Important: these are IDs (strings), not full `Category` objects
 }
+
+export interface Order {
+  id: string;
+  items: CartItem[];
+  tableNumber: string;
+  status: 'pending' | 'completed' | 'canceled';
+  total: number;
+  createdAt: string;
+  notes?: string;
+}
+
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  role: 'owner' | 'employee';
+}

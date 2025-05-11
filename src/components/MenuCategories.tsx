@@ -1,17 +1,33 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { categories, menuItems, categorySections } from '@/data/menuData';
+import { useMenu } from '@/context/MenuContext';
 
 interface MenuCategoriesProps {
   activeCategories: string[];
   setActiveCategories: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-
 const MenuCategories = ({ activeCategories, setActiveCategories }: MenuCategoriesProps) => {
+  const { categories, menuItems } = useMenu();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const isCategoryActive = (id: string) => activeCategories.includes(id);
+
+  const categorySections = [
+    {
+      title: "Hot Drinks",
+      ids: categories.filter(cat => cat.name.includes('Coffee') || cat.name.includes('Tea')).map(cat => cat.id)
+    },
+    {
+      title: "Cold Drinks",
+      ids: categories.filter(cat => cat.name.includes('Cold') || cat.name.includes('Smoothie')).map(cat => cat.id)
+    },
+    {
+      title: "Snacks & Bakery",
+      ids: categories.filter(cat => cat.name.includes('Pastry') || cat.name.includes('Sandwich') || cat.name.includes('Dessert')).map(cat => cat.id)
+    }
+  ];
 
   const getCategoryImage = (categoryIds: string[]) => {
     const items = menuItems.filter(item => categoryIds.includes(item.category));
@@ -66,7 +82,6 @@ const MenuCategories = ({ activeCategories, setActiveCategories }: MenuCategorie
                   });
                 }}
               >
-
                 {section.title}
               </Button>
             );

@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CartItem } from '@/types';
 import { toast } from '@/hooks/use-toast';
+import { Textarea } from '@/components/ui/textarea';
+import { useOrders } from '@/context/OrderContext';
 
 interface CartProps {
   isOpen: boolean;
@@ -24,6 +26,8 @@ const Cart = ({
   clearCart
 }: CartProps) => {
   const [tableNumber, setTableNumber] = useState('');
+  const [notes, setNotes] = useState('');
+  const { addOrder } = useOrders();
   
   const totalPrice = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
@@ -40,6 +44,9 @@ const Cart = ({
       return;
     }
     
+    // Add order to the system
+    addOrder(cartItems, tableNumber, notes);
+    
     toast({
       title: "Order placed!",
       description: `Your order for table ${tableNumber} has been received.`,
@@ -47,6 +54,7 @@ const Cart = ({
     
     clearCart();
     setTableNumber('');
+    setNotes('');
     closeCart();
   };
 
@@ -153,6 +161,21 @@ const Cart = ({
                   className="w-28 text-right"
                 />
               </div>
+              
+              <div className="mb-4">
+                <label htmlFor="notes" className="text-sm text-muted-foreground mb-1 block">
+                  Special instructions
+                </label>
+                <Textarea
+                  id="notes"
+                  placeholder="Any special requests?"
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  className="w-full"
+                  rows={2}
+                />
+              </div>
+              
               <div className="flex items-center justify-between mb-6">
                 <span className="font-medium">Total</span>
                 <span className="text-xl font-bold">${totalPrice.toFixed(2)}</span>

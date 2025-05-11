@@ -3,23 +3,19 @@ import { useMemo, useState } from 'react';
 import { MenuItem as MenuItemType } from '@/types';
 import MenuItem from './MenuItem';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { categories } from '@/data/menuData';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronDown } from "lucide-react";
+import { useMenu } from '@/context/MenuContext';
 import { useIsMobile } from '@/hooks/use-mobile';
-
 
 interface MenuListProps {
   activeCategories: string[];
   addToCart: (item: MenuItemType) => void;
 }
 
-
-  const MenuList = ({
-    activeCategories,
-    addToCart
-  }: MenuListProps) => {
-  
+const MenuList = ({
+  activeCategories,
+  addToCart
+}: MenuListProps) => {
+  const { categories, menuItems } = useMenu();
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
   const isMobile = useIsMobile();
   
@@ -28,8 +24,7 @@ interface MenuListProps {
       return categories;
     }
     return categories.filter(category => activeCategories.includes(category.id));
-  }, [activeCategories]);
-  
+  }, [activeCategories, categories]);
   
   const getItemsByCategory = (categoryId: string) => {
     return menuItems.filter(item => item.category === categoryId);
@@ -121,5 +116,4 @@ interface MenuListProps {
   );
 };
 
-import { menuItems } from '@/data/menuData';
 export default MenuList;
