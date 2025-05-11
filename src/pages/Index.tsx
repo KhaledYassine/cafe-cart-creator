@@ -11,11 +11,12 @@ import { useToast } from '@/hooks/use-toast';
 import { useMenu } from '@/context/MenuContext';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
+import { Button } from '@/components/ui/button';
 
 const Index = () => {
-  const { menuItems, categories } = useMenu();
+  const { menuItems, categories, isLoading } = useMenu();
   const [activeCategory, setActiveCategory] = useState('all');
-  const [activeCategories, setActiveCategories] = useState<string[]>(categories.map(cat => cat.id));
+  const [activeCategories, setActiveCategories] = useState<string[]>([]);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -24,7 +25,9 @@ const Index = () => {
 
   // Update active categories when categories change
   useEffect(() => {
-    setActiveCategories(categories.map(cat => cat.id));
+    if (categories && categories.length > 0) {
+      setActiveCategories(categories.map(cat => cat.id));
+    }
   }, [categories]);
 
   const toggleCart = () => {
@@ -114,7 +117,27 @@ const Index = () => {
                     {user?.role === 'owner' ? 'Dashboard' : 'View Orders'}
                   </Button>
                 </Link>
+                <Button variant="outline" onClick={() => {
+                  const { logout } = useAuth();
+                  logout();
+                }}>
+                  Logout
+                </Button>
               </div>
+            </div>
+          </div>
+        )}
+
+        {!isAuthenticated && (
+          <div className="bg-primary/5 py-8">
+            <div className="container mx-auto px-4 text-center">
+              <h3 className="text-xl font-serif mb-3">Staff Access</h3>
+              <p className="text-muted-foreground mb-4">
+                Are you a staff member? Log in to access the admin portal.
+              </p>
+              <Link to="/login">
+                <Button>Staff Login</Button>
+              </Link>
             </div>
           </div>
         )}
@@ -141,5 +164,4 @@ const Index = () => {
   );
 };
 
-import { Button } from '@/components/ui/button';
 export default Index;

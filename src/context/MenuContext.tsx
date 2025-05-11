@@ -1,17 +1,21 @@
 
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { MenuItem, Category } from '@/types';
-import { categories as defaultCategories, menuItems as defaultMenuItems } from '@/data/menuData';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from './AuthContext';
 
 interface MenuContextType {
   menuItems: MenuItem[];
   categories: Category[];
-  addMenuItem: (item: Omit<MenuItem, 'id'>) => void;
-  updateMenuItem: (id: string, item: Partial<MenuItem>) => void;
-  deleteMenuItem: (id: string) => void;
-  addCategory: (category: Omit<Category, 'id'>) => void;
-  updateCategory: (id: string, category: Partial<Category>) => void;
-  deleteCategory: (id: string) => void;
+  addMenuItem: (item: Omit<MenuItem, 'id'>) => Promise<void>;
+  updateMenuItem: (id: string, item: Partial<MenuItem>) => Promise<void>;
+  deleteMenuItem: (id: string) => Promise<void>;
+  addCategory: (category: Omit<Category, 'id'>) => Promise<void>;
+  updateCategory: (id: string, category: Partial<Category>) => Promise<void>;
+  deleteCategory: (id: string) => Promise<void>;
+  isLoading: boolean;
+  refreshMenu: () => Promise<void>;
 }
 
 const MenuContext = createContext<MenuContextType | undefined>(undefined);
@@ -19,87 +23,206 @@ const MenuContext = createContext<MenuContextType | undefined>(undefined);
 export const MenuProvider = ({ children }: { children: ReactNode }) => {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const { toast } = useToast();
+  const { isAuthenticated } = useAuth();
   
-  // Load menu data from localStorage or use defaults
   useEffect(() => {
-    const storedItems = localStorage.getItem('cafeMenuItems');
-    const storedCategories = localStorage.getItem('cafeCategories');
-    
-    if (storedItems) {
-      try {
-        setMenuItems(JSON.parse(storedItems));
-      } catch (error) {
-        console.error('Failed to parse stored menu items', error);
-        setMenuItems(defaultMenuItems);
+    if (isAuthenticated) {
+      loadMenuData();
+    }
+  }, [isAuthenticated]);
+  
+  const loadMenuData = async () => {
+    setIsLoading(true);
+    try {
+      await Promise.all([
+        fetchCategories(),
+        fetchMenuItems()
+      ]);
+    } catch (error) {
+      console.error('Error loading menu data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  const fetchCategories = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('categories')
+        .select('*')
+        .order('name');
+        
+      if (error) throw error;
+      
+      setCategories(data as Category[]);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
+  
+  const fetchMenuItems = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('menu_items')
+        .select('*')
+        .order('name');
+        
+      if (error) throw error;
+      
+      setMenuItems(data as MenuItem[]);
+    } catch (error) {
+      console.error('Error fetching menu items:', error);
+    }
+  };
+
+  const addMenuItem = async (item: Omit<MenuItem, 'id'>) => {
+    try {
+      const { data, error } = await supabase
+        .from('menu_items')
+        .insert([item])
+        .select()
+        .single();
+        
+      if (error) throw error;
+      
+      setMenuItems(prev => [...prev, data as MenuItem]);
+      toast({ title: 'Menu item added successfully' });
+    } catch (error: any) {
+      toast({ 
+        variant: 'destructive', 
+        title: 'Failed to add menu item',
+        description: error.message
+      });
+      throw error;
+    }
+  };
+
+  const updateMenuItem = async (id: string, item: Partial<MenuItem>) => {
+    try {
+      const { data, error } = await supabase
+        .from('menu_items')
+        .update(item)
+        .eq('id', id)
+        .select()
+        .single();
+        
+      if (error) throw error;
+      
+      setMenuItems(prev => prev.map(menuItem => 
+        menuItem.id === id ? { ...menuItem, ...data } as MenuItem : menuItem
+      ));
+      
+      toast({ title: 'Menu item updated successfully' });
+    } catch (error: any) {
+      toast({ 
+        variant: 'destructive', 
+        title: 'Failed to update menu item',
+        description: error.message
+      });
+      throw error;
+    }
+  };
+
+  const deleteMenuItem = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('menu_items')
+        .delete()
+        .eq('id', id);
+        
+      if (error) throw error;
+      
+      setMenuItems(prev => prev.filter(item => item.id !== id));
+      toast({ title: 'Menu item deleted successfully' });
+    } catch (error: any) {
+      toast({ 
+        variant: 'destructive', 
+        title: 'Failed to delete menu item',
+        description: error.message
+      });
+      throw error;
+    }
+  };
+
+  const addCategory = async (category: Omit<Category, 'id'>) => {
+    try {
+      const { data, error } = await supabase
+        .from('categories')
+        .insert([category])
+        .select()
+        .single();
+        
+      if (error) throw error;
+      
+      setCategories(prev => [...prev, data as Category]);
+      toast({ title: 'Category added successfully' });
+    } catch (error: any) {
+      toast({ 
+        variant: 'destructive', 
+        title: 'Failed to add category',
+        description: error.message
+      });
+      throw error;
+    }
+  };
+
+  const updateCategory = async (id: string, category: Partial<Category>) => {
+    try {
+      const { data, error } = await supabase
+        .from('categories')
+        .update(category)
+        .eq('id', id)
+        .select()
+        .single();
+        
+      if (error) throw error;
+      
+      setCategories(prev => prev.map(cat => 
+        cat.id === id ? { ...cat, ...data } as Category : cat
+      ));
+      
+      toast({ title: 'Category updated successfully' });
+    } catch (error: any) {
+      toast({ 
+        variant: 'destructive', 
+        title: 'Failed to update category',
+        description: error.message
+      });
+      throw error;
+    }
+  };
+
+  const deleteCategory = async (id: string) => {
+    try {
+      // Check if there are items using this category
+      const hasItems = menuItems.some(item => item.category === id);
+      if (hasItems) {
+        throw new Error("Can't delete category that has menu items");
       }
-    } else {
-      setMenuItems(defaultMenuItems);
+      
+      const { error } = await supabase
+        .from('categories')
+        .delete()
+        .eq('id', id);
+        
+      if (error) throw error;
+      
+      setCategories(prev => prev.filter(cat => cat.id !== id));
+      toast({ title: 'Category deleted successfully' });
+    } catch (error: any) {
+      toast({ 
+        variant: 'destructive', 
+        title: 'Failed to delete category',
+        description: error.message
+      });
+      throw error;
     }
-    
-    if (storedCategories) {
-      try {
-        setCategories(JSON.parse(storedCategories));
-      } catch (error) {
-        console.error('Failed to parse stored categories', error);
-        setCategories(defaultCategories);
-      }
-    } else {
-      setCategories(defaultCategories);
-    }
-  }, []);
-  
-  // Save menu data to localStorage whenever they change
-  useEffect(() => {
-    localStorage.setItem('cafeMenuItems', JSON.stringify(menuItems));
-  }, [menuItems]);
-  
-  useEffect(() => {
-    localStorage.setItem('cafeCategories', JSON.stringify(categories));
-  }, [categories]);
-
-  const addMenuItem = (item: Omit<MenuItem, 'id'>) => {
-    const newItem: MenuItem = {
-      ...item,
-      id: `item-${Date.now()}`,
-    };
-    setMenuItems(prev => [...prev, newItem]);
   };
 
-  const updateMenuItem = (id: string, item: Partial<MenuItem>) => {
-    setMenuItems(prev => 
-      prev.map(menuItem => 
-        menuItem.id === id ? { ...menuItem, ...item } : menuItem
-      )
-    );
-  };
-
-  const deleteMenuItem = (id: string) => {
-    setMenuItems(prev => prev.filter(item => item.id !== id));
-  };
-
-  const addCategory = (category: Omit<Category, 'id'>) => {
-    const newCategory: Category = {
-      ...category,
-      id: `category-${Date.now()}`,
-    };
-    setCategories(prev => [...prev, newCategory]);
-  };
-
-  const updateCategory = (id: string, category: Partial<Category>) => {
-    setCategories(prev => 
-      prev.map(cat => 
-        cat.id === id ? { ...cat, ...category } : cat
-      )
-    );
-  };
-
-  const deleteCategory = (id: string) => {
-    // Don't delete if there are items using this category
-    const hasItems = menuItems.some(item => item.category === id);
-    if (hasItems) {
-      throw new Error("Can't delete category that has menu items");
-    }
-    setCategories(prev => prev.filter(cat => cat.id !== id));
+  const refreshMenu = async () => {
+    return loadMenuData();
   };
 
   return (
@@ -113,6 +236,8 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
         addCategory,
         updateCategory,
         deleteCategory,
+        isLoading,
+        refreshMenu
       }}
     >
       {children}
