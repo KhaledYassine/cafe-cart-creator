@@ -39,3 +39,36 @@ export interface User {
   name: string;
   role: 'owner' | 'employee';
 }
+
+// Add interfaces to map between Supabase DB and our app types
+export interface SupabaseMenuItem {
+  id: string;
+  name: string;
+  description: string | null;
+  price: number;
+  image: string | null;
+  category_id: string | null;
+  tags: string[] | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SupabaseOrder {
+  id: string;
+  table_number: string;
+  status: string;
+  total: number;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SupabaseOrderItem {
+  id: string;
+  order_id: string | null;
+  menu_item_id: string | null;
+  name: string;
+  quantity: number;
+  price: number;
+  created_at: string;
+}

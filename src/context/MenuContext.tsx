@@ -1,6 +1,6 @@
 
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { MenuItem, Category } from '@/types';
+import { MenuItem, Category, SupabaseMenuItem } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from './AuthContext';
@@ -71,7 +71,18 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
         
       if (error) throw error;
       
-      setMenuItems(data as MenuItem[]);
+      // Convert from Supabase format to our app's MenuItem format
+      const formattedItems: MenuItem[] = (data as SupabaseMenuItem[]).map(item => ({
+        id: item.id,
+        name: item.name,
+        description: item.description || '',
+        price: item.price,
+        image: item.image || '',
+        category: item.category_id || '', // Map category_id to category
+        tags: item.tags || []
+      }));
+      
+      setMenuItems(formattedItems);
     } catch (error) {
       console.error('Error fetching menu items:', error);
     }
@@ -79,15 +90,36 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
 
   const addMenuItem = async (item: Omit<MenuItem, 'id'>) => {
     try {
+      // Convert from our app's MenuItem format to Supabase format
+      const supabaseItem = {
+        name: item.name,
+        description: item.description,
+        price: item.price,
+        image: item.image,
+        category_id: item.category, // Map category to category_id
+        tags: item.tags
+      };
+      
       const { data, error } = await supabase
         .from('menu_items')
-        .insert([item])
+        .insert([supabaseItem])
         .select()
         .single();
         
       if (error) throw error;
       
-      setMenuItems(prev => [...prev, data as MenuItem]);
+      // Convert back to our app's MenuItem format
+      const newItem: MenuItem = {
+        id: data.id,
+        name: data.name,
+        description: data.description || '',
+        price: data.price,
+        image: data.image || '',
+        category: data.category_id || '',
+        tags: data.tags || []
+      };
+      
+      setMenuItems(prev => [...prev, newItem]);
       toast({ title: 'Menu item added successfully' });
     } catch (error: any) {
       toast({ 
@@ -101,17 +133,38 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
 
   const updateMenuItem = async (id: string, item: Partial<MenuItem>) => {
     try {
+      // Convert from our app's MenuItem format to Supabase format
+      const supabaseItem: Partial<SupabaseMenuItem> = {};
+      
+      if (item.name) supabaseItem.name = item.name;
+      if (item.description !== undefined) supabaseItem.description = item.description;
+      if (item.price) supabaseItem.price = item.price;
+      if (item.image !== undefined) supabaseItem.image = item.image;
+      if (item.category) supabaseItem.category_id = item.category;
+      if (item.tags) supabaseItem.tags = item.tags;
+      
       const { data, error } = await supabase
         .from('menu_items')
-        .update(item)
+        .update(supabaseItem)
         .eq('id', id)
         .select()
         .single();
         
       if (error) throw error;
       
+      // Convert back to our app's MenuItem format
+      const updatedItem: MenuItem = {
+        id: data.id,
+        name: data.name,
+        description: data.description || '',
+        price: data.price,
+        image: data.image || '',
+        category: data.category_id || '',
+        tags: data.tags || []
+      };
+      
       setMenuItems(prev => prev.map(menuItem => 
-        menuItem.id === id ? { ...menuItem, ...data } as MenuItem : menuItem
+        menuItem.id === id ? updatedItem : menuItem
       ));
       
       toast({ title: 'Menu item updated successfully' });

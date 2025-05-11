@@ -1,6 +1,6 @@
 
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { Order, CartItem } from '@/types';
+import { Order, CartItem, SupabaseOrder, SupabaseOrderItem } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from './AuthContext';
@@ -51,8 +51,8 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
         if (itemsError) throw itemsError;
         
         // Map order items to their respective orders
-        const ordersWithItems = ordersData.map(order => {
-          const orderItems = itemsData
+        const ordersWithItems = (ordersData as SupabaseOrder[]).map(order => {
+          const orderItems = (itemsData as SupabaseOrderItem[])
             .filter(item => item.order_id === order.id)
             .map(item => ({
               id: item.menu_item_id || item.id,
@@ -66,9 +66,15 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
               tags: []
             }));
           
+          // Convert from Supabase format to our app's Order format
           return {
-            ...order,
+            id: order.id,
             items: orderItems,
+            tableNumber: order.table_number,
+            status: order.status as 'pending' | 'completed' | 'canceled',
+            total: order.total,
+            createdAt: order.created_at,
+            notes: order.notes || undefined
           } as Order;
         });
         
@@ -122,8 +128,13 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
       
       // Create the complete order object with items
       const newOrder: Order = {
-        ...orderData,
+        id: orderData.id,
         items,
+        tableNumber: orderData.table_number,
+        status: orderData.status as 'pending' | 'completed' | 'canceled',
+        total: orderData.total,
+        createdAt: orderData.created_at,
+        notes: orderData.notes || undefined
       };
       
       setOrders(prevOrders => [newOrder, ...prevOrders]);
