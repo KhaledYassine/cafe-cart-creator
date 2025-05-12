@@ -21,7 +21,7 @@ const Index = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
 
   // Update active categories when categories change
   useEffect(() => {
@@ -85,6 +85,23 @@ const Index = () => {
     setCartItems([]);
   };
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+      toast({
+        title: "Logged out",
+        description: "You have been successfully logged out."
+      });
+    } catch (error) {
+      console.error("Logout error:", error);
+      toast({
+        variant: "destructive",
+        title: "Logout failed",
+        description: "Could not log out. Please try again."
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header cartItems={cartItems} toggleCart={toggleCart} />
@@ -117,10 +134,7 @@ const Index = () => {
                     {user?.role === 'owner' ? 'Dashboard' : 'View Orders'}
                   </Button>
                 </Link>
-                <Button variant="outline" onClick={() => {
-                  const { logout } = useAuth();
-                  logout();
-                }}>
+                <Button variant="outline" onClick={handleLogout}>
                   Logout
                 </Button>
               </div>

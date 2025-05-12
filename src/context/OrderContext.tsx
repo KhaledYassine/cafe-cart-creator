@@ -51,7 +51,7 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
         if (itemsError) throw itemsError;
         
         // Map order items to their respective orders
-        const ordersWithItems = (ordersData as SupabaseOrder[]).map(order => {
+        const ordersWithItems: Order[] = (ordersData as SupabaseOrder[]).map(order => {
           const orderItems = (itemsData as SupabaseOrderItem[])
             .filter(item => item.order_id === order.id)
             .map(item => ({
@@ -75,7 +75,7 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
             total: order.total,
             createdAt: order.created_at,
             notes: order.notes || undefined
-          } as Order;
+          };
         });
         
         setOrders(ordersWithItems);

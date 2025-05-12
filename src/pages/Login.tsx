@@ -84,6 +84,9 @@ export default function Login() {
   // Function to check if the owner account exists
   const checkOwnerAccount = async () => {
     try {
+      setIsLoading(true);
+      console.log('Checking owner account...');
+      
       const { data, error } = await supabase.auth.signInWithPassword({
         email: 'owner@joes.cafe',
         password: 'owner123'
@@ -97,6 +100,7 @@ export default function Login() {
           description: "The owner account may not exist or have incorrect credentials."
         });
       } else {
+        console.log('Owner account valid:', data);
         // Log out immediately after checking
         await supabase.auth.signOut();
         toast({
@@ -111,6 +115,8 @@ export default function Login() {
         title: "Owner account check failed",
         description: error.message || "Unable to verify owner account"
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -186,8 +192,14 @@ export default function Login() {
                   size="sm" 
                   onClick={checkOwnerAccount}
                   className="mt-2"
+                  disabled={isLoading}
                 >
-                  Verify Owner Account
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Checking...
+                    </>
+                  ) : "Verify Owner Account"}
                 </Button>
               </div>
             </form>
