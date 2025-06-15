@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
@@ -30,15 +29,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       (event, session) => {
         console.log('Auth state changed:', event, session?.user?.email);
         setSession(session);
+        
         if (session?.user) {
-          // Defer profile fetch to avoid blocking
+          // Create a basic user profile immediately
+          const userData: User = {
+            id: session.user.id,
+            email: session.user.email || '',
+            name: session.user.email?.split('@')[0] || '',
+            role: 'employee'
+          };
+          setUser(userData);
+          
+          // Try to fetch the actual profile without blocking
           setTimeout(() => {
             fetchProfile(session.user.id);
-          }, 0);
+          }, 100);
         } else {
           setUser(null);
-          setIsLoading(false);
         }
+        setIsLoading(false);
       }
     );
 
@@ -46,8 +55,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       console.log('Initial session check:', session?.user?.email);
       setSession(session);
+      
       if (session?.user) {
-        fetchProfile(session.user.id);
+        // Create a basic user profile immediately
+        const userData: User = {
+          id: session.user.id,
+          email: session.user.email || '',
+          name: session.user.email?.split('@')[0] || '',
+          role: 'employee'
+        };
+        setUser(userData);
+        
+        // Try to fetch the actual profile without blocking
+        setTimeout(() => {
+          fetchProfile(session.user.id);
+        }, 100);
       } else {
         setIsLoading(false);
       }
@@ -63,31 +85,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         .from('profiles')
         .select('*')
         .eq('id', userId)
-        .single();
+        .maybeSingle();
       
       if (error) {
         console.error('Error fetching user profile:', error);
-        // If profile doesn't exist, create a basic user profile
-        if (error.code === 'PGRST116') {
-          console.log('Profile not found, creating basic user profile');
-          const userData: User = {
-            id: userId,
-            email: session?.user?.email || '',
-            name: session?.user?.email?.split('@')[0] || '',
-            role: 'employee'
-          };
-          setUser(userData);
-          setIsLoading(false);
-          return;
-        }
-        throw error;
+        // Don't throw error, just use default profile
+        return;
       }
       
-      if (data) {
+      if (data && session?.user) {
         const userData: User = {
           id: userId,
-          email: session?.user?.email || '',
-          name: data.name || '',
+          email: session.user.email || '',
+          name: data.name || session.user.email?.split('@')[0] || '',
           role: data.role as 'owner' | 'employee',
         };
         console.log('User profile loaded:', userData);
@@ -95,17 +105,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     } catch (error) {
       console.error('Error fetching user profile:', error);
-      // Set a default user if profile fetch fails
-      if (session?.user) {
-        setUser({
-          id: userId,
-          email: session.user.email || '',
-          name: session.user.email?.split('@')[0] || '',
-          role: 'employee'
-        });
-      }
-    } finally {
-      setIsLoading(false);
+      // Don't throw error, just keep the basic profile
     }
   };
 
