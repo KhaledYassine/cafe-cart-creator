@@ -67,9 +67,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       
       if (error) {
         console.error('Error fetching user profile:', error);
-        // If profile doesn't exist, create a default one
+        // If profile doesn't exist, create a basic user profile
         if (error.code === 'PGRST116') {
-          console.log('Profile not found, will be created by trigger on next auth action');
+          console.log('Profile not found, creating basic user profile');
+          const userData: User = {
+            id: userId,
+            email: session?.user?.email || '',
+            name: session?.user?.email?.split('@')[0] || '',
+            role: 'employee'
+          };
+          setUser(userData);
+          setIsLoading(false);
+          return;
         }
         throw error;
       }

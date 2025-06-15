@@ -50,7 +50,10 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
         .select('*')
         .order('name');
         
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching categories:', error);
+        return;
+      }
       
       console.log('Categories fetched:', data?.length || 0);
       setCategories(data as Category[]);
@@ -67,7 +70,10 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
         .select('*')
         .order('name');
         
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching menu items:', error);
+        return;
+      }
       
       console.log('Menu items fetched:', data?.length || 0);
       
