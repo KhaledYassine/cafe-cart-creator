@@ -26,12 +26,15 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (isAuthenticated) {
       loadOrders();
+    } else {
+      setIsLoading(false);
     }
   }, [isAuthenticated]);
   
   const loadOrders = async () => {
     setIsLoading(true);
     try {
+      console.log('Loading orders...');
       const { data: ordersData, error: ordersError } = await supabase
         .from('orders')
         .select('*')
@@ -39,8 +42,10 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
         
       if (ordersError) throw ordersError;
       
+      console.log('Orders fetched:', ordersData?.length || 0);
+      
       // Get all order items for these orders
-      const orderIds = ordersData.map(order => order.id);
+      const orderIds = ordersData?.map(order => order.id) || [];
       
       if (orderIds.length > 0) {
         const { data: itemsData, error: itemsError } = await supabase
@@ -50,6 +55,8 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
           
         if (itemsError) throw itemsError;
         
+        console.log('Order items fetched:', itemsData?.length || 0);
+        
         // Map order items to their respective orders
         const ordersWithItems: Order[] = (ordersData as SupabaseOrder[]).map(order => {
           const orderItems = (itemsData as SupabaseOrderItem[])
@@ -57,22 +64,20 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
             .map(item => ({
               id: item.menu_item_id || item.id,
               name: item.name,
-              price: item.price,
+              price: Number(item.price),
               quantity: item.quantity,
-              // Add default values for required MenuItem properties
               description: '',
               image: '',
               category: '',
               tags: []
             }));
           
-          // Convert from Supabase format to our app's Order format
           return {
             id: order.id,
             items: orderItems,
             tableNumber: order.table_number,
             status: order.status as 'pending' | 'completed' | 'canceled',
-            total: order.total,
+            total: Number(order.total),
             createdAt: order.created_at,
             notes: order.notes || undefined
           };
@@ -92,6 +97,7 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
 
   const addOrder = async (items: CartItem[], tableNumber: string, notes?: string) => {
     try {
+      console.log('Adding order for table:', tableNumber);
       // Calculate total
       const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
       
@@ -111,6 +117,8 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
         
       if (orderError) throw orderError;
       
+      console.log('Order created:', orderData.id);
+      
       // Then insert order items
       const orderItems = items.map(item => ({
         order_id: orderData.id,
@@ -126,13 +134,15 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
         
       if (itemsError) throw itemsError;
       
+      console.log('Order items created:', orderItems.length);
+      
       // Create the complete order object with items
       const newOrder: Order = {
         id: orderData.id,
         items,
         tableNumber: orderData.table_number,
         status: orderData.status as 'pending' | 'completed' | 'canceled',
-        total: orderData.total,
+        total: Number(orderData.total),
         createdAt: orderData.created_at,
         notes: orderData.notes || undefined
       };
@@ -140,6 +150,7 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
       setOrders(prevOrders => [newOrder, ...prevOrders]);
       toast({ title: 'Order placed successfully' });
     } catch (error: any) {
+      console.error('Error adding order:', error);
       toast({
         variant: 'destructive',
         title: 'Failed to place order',
@@ -151,6 +162,7 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
 
   const updateOrderStatus = async (id: string, status: Order['status']) => {
     try {
+      console.log('Updating order status:', id, status);
       const { data, error } = await supabase
         .from('orders')
         .update({ status })
@@ -168,6 +180,7 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
       
       toast({ title: `Order ${status}` });
     } catch (error: any) {
+      console.error('Error updating order status:', error);
       toast({
         variant: 'destructive',
         title: 'Failed to update order',

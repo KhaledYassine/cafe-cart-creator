@@ -1,9 +1,7 @@
-
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { MenuItem, Category, SupabaseMenuItem } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from './AuthContext';
 
 interface MenuContextType {
   menuItems: MenuItem[];
@@ -25,13 +23,10 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
-  const { isAuthenticated } = useAuth();
   
   useEffect(() => {
-    if (isAuthenticated) {
-      loadMenuData();
-    }
-  }, [isAuthenticated]);
+    loadMenuData();
+  }, []);
   
   const loadMenuData = async () => {
     setIsLoading(true);
@@ -49,6 +44,7 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
   
   const fetchCategories = async () => {
     try {
+      console.log('Fetching categories...');
       const { data, error } = await supabase
         .from('categories')
         .select('*')
@@ -56,6 +52,7 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
         
       if (error) throw error;
       
+      console.log('Categories fetched:', data?.length || 0);
       setCategories(data as Category[]);
     } catch (error) {
       console.error('Error fetching categories:', error);
@@ -64,6 +61,7 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
   
   const fetchMenuItems = async () => {
     try {
+      console.log('Fetching menu items...');
       const { data, error } = await supabase
         .from('menu_items')
         .select('*')
@@ -71,14 +69,16 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
         
       if (error) throw error;
       
+      console.log('Menu items fetched:', data?.length || 0);
+      
       // Convert from Supabase format to our app's MenuItem format
       const formattedItems: MenuItem[] = (data as SupabaseMenuItem[]).map(item => ({
         id: item.id,
         name: item.name,
         description: item.description || '',
-        price: item.price,
+        price: Number(item.price),
         image: item.image || '',
-        category: item.category_id || '', // Map category_id to category
+        category: item.category_id || '',
         tags: item.tags || []
       }));
       
@@ -90,13 +90,12 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
 
   const addMenuItem = async (item: Omit<MenuItem, 'id'>) => {
     try {
-      // Convert from our app's MenuItem format to Supabase format
       const supabaseItem = {
         name: item.name,
         description: item.description,
         price: item.price,
         image: item.image,
-        category_id: item.category, // Map category to category_id
+        category_id: item.category,
         tags: item.tags
       };
       
@@ -108,12 +107,11 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
         
       if (error) throw error;
       
-      // Convert back to our app's MenuItem format
       const newItem: MenuItem = {
         id: data.id,
         name: data.name,
         description: data.description || '',
-        price: data.price,
+        price: Number(data.price),
         image: data.image || '',
         category: data.category_id || '',
         tags: data.tags || []
@@ -133,7 +131,6 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
 
   const updateMenuItem = async (id: string, item: Partial<MenuItem>) => {
     try {
-      // Convert from our app's MenuItem format to Supabase format
       const supabaseItem: Partial<SupabaseMenuItem> = {};
       
       if (item.name) supabaseItem.name = item.name;
@@ -152,12 +149,11 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
         
       if (error) throw error;
       
-      // Convert back to our app's MenuItem format
       const updatedItem: MenuItem = {
         id: data.id,
         name: data.name,
         description: data.description || '',
-        price: data.price,
+        price: Number(data.price),
         image: data.image || '',
         category: data.category_id || '',
         tags: data.tags || []
@@ -249,7 +245,6 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
 
   const deleteCategory = async (id: string) => {
     try {
-      // Check if there are items using this category
       const hasItems = menuItems.some(item => item.category === id);
       if (hasItems) {
         throw new Error("Can't delete category that has menu items");

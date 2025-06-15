@@ -28,20 +28,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        console.log('Auth state changed:', event, session?.user?.email);
         setSession(session);
         if (session?.user) {
-          // Get user profile data
+          // Defer profile fetch to avoid blocking
           setTimeout(() => {
             fetchProfile(session.user.id);
           }, 0);
         } else {
           setUser(null);
+          setIsLoading(false);
         }
       }
     );
 
     // THEN check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('Initial session check:', session?.user?.email);
       setSession(session);
       if (session?.user) {
         fetchProfile(session.user.id);
@@ -55,24 +58,43 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchProfile = async (userId: string) => {
     try {
+      console.log('Fetching profile for user:', userId);
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', userId)
         .single();
       
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching user profile:', error);
+        // If profile doesn't exist, create a default one
+        if (error.code === 'PGRST116') {
+          console.log('Profile not found, will be created by trigger on next auth action');
+        }
+        throw error;
+      }
       
       if (data) {
-        setUser({
+        const userData: User = {
           id: userId,
           email: session?.user?.email || '',
           name: data.name || '',
           role: data.role as 'owner' | 'employee',
-        });
+        };
+        console.log('User profile loaded:', userData);
+        setUser(userData);
       }
     } catch (error) {
       console.error('Error fetching user profile:', error);
+      // Set a default user if profile fetch fails
+      if (session?.user) {
+        setUser({
+          id: userId,
+          email: session.user.email || '',
+          name: session.user.email?.split('@')[0] || '',
+          role: 'employee'
+        });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -80,13 +102,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = async (email: string, password: string) => {
     try {
+      console.log('Attempting login with:', email);
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
       
-      if (error) throw error;
+      if (error) {
+        console.error('Login error:', error);
+        throw error;
+      }
+      
+      console.log('Login successful:', data.user?.email);
     } catch (error: any) {
+      console.error('Login failed:', error);
       toast({
         variant: "destructive",
         title: "Login failed",
@@ -98,10 +127,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signup = async (email: string, password: string, userData: Partial<User>) => {
     try {
+      console.log('Attempting signup for:', email);
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
+          emailRedirectTo: `${window.location.origin}/`,
           data: {
             name: userData.name,
             role: userData.role || 'employee',
@@ -111,11 +142,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       
       if (error) throw error;
       
+      console.log('Signup successful:', data.user?.email);
       toast({
         title: "Account created",
-        description: "Please check your email for verification",
+        description: "Account created successfully. You can now log in.",
       });
     } catch (error: any) {
+      console.error('Signup error:', error);
       toast({
         variant: "destructive",
         title: "Sign up failed",
@@ -127,10 +160,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = async () => {
     try {
+      console.log('Logging out user...');
       await supabase.auth.signOut();
       setUser(null);
       setSession(null);
+      console.log('Logout successful');
     } catch (error: any) {
+      console.error('Logout error:', error);
       toast({
         variant: "destructive",
         title: "Logout failed",
@@ -147,7 +183,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         login,
         signup,
         logout,
-        isAuthenticated: !!user,
+        isAuthenticated: !!user && !!session,
         isOwner: user?.role === 'owner',
         isLoading,
       }}
