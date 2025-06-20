@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useMenu } from '@/context/MenuContext';
 import AdminLayout from '@/components/AdminLayout';
@@ -83,6 +82,12 @@ export default function Dashboard() {
 
   const handleEdit = (item: MenuItem) => {
     setEditingItem({ ...item });
+  };
+
+  const handleEditingItemChange = (updatedItem: Partial<MenuItem>) => {
+    if (editingItem) {
+      setEditingItem({ ...editingItem, ...updatedItem });
+    }
   };
 
   const handleSaveEdit = async () => {
@@ -294,7 +299,7 @@ export default function Dashboard() {
                               categories={categories}
                               onSave={handleSaveEdit}
                               onCancel={() => setEditingItem(null)}
-                              onChange={setEditingItem}
+                              onChange={handleEditingItemChange}
                               isEditing
                             />
                           ) : (
