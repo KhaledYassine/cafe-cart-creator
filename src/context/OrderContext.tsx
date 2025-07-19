@@ -3,7 +3,7 @@ import { createContext, useContext, useState, ReactNode, useEffect } from 'react
 import { Order, CartItem, SupabaseOrder, SupabaseOrderItem } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from './AuthContext';
+import { useAuth0 } from '@auth0/auth0-react';
 
 interface OrderContextType {
   orders: Order[];
@@ -21,7 +21,7 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth0();
   
   useEffect(() => {
     if (isAuthenticated) {

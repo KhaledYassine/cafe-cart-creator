@@ -10,7 +10,7 @@ import { CartItem, MenuItem } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 import { useMenu } from '@/context/MenuContext';
 import { Link } from 'react-router-dom';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth0 } from '@auth0/auth0-react';
 import { Button } from '@/components/ui/button';
 
 const Index = () => {
@@ -21,7 +21,7 @@ const Index = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth0();
 
   // Update active categories when categories change
   useEffect(() => {

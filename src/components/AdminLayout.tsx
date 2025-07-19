@@ -1,7 +1,7 @@
 
 import { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth0 } from '@auth0/auth0-react';
 import { Button } from '@/components/ui/button';
 import { User, LogOut, Coffee, ClipboardList } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -12,8 +12,10 @@ interface AdminLayoutProps {
 }
 
 export default function AdminLayout({ children, requiredRole }: AdminLayoutProps) {
-  const { user, isAuthenticated, logout } = useAuth();
-  
+  const auth = useAuth0();
+  console.log('Auth0 context:', auth);
+  const { user, isAuthenticated, logout } = auth;
+  console.log('user data____:', user, '_______isAuthenticated:', isAuthenticated, '******requiredRole:', requiredRole);
   // Redirect to login if not authenticated
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
