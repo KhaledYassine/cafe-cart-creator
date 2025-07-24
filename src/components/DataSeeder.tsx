@@ -36,7 +36,6 @@ const DataSeeder = () => {
         .from('categories')
         .upsert(
           categories.map(cat => ({
-            id: cat.id,
             name: cat.name
           })),
           { onConflict: 'id' }

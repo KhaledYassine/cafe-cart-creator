@@ -1,10 +1,18 @@
 
+
 import { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Button } from '@/components/ui/button';
 import { User, LogOut, Coffee, ClipboardList } from 'lucide-react';
 import { Link } from 'react-router-dom';
+
+function getUserRole(user: any) {
+  if (!user) return undefined;
+  const roleClaim = user["https://your-app.com/role"] || user["http://localhost:8080/role"];
+  if (Array.isArray(roleClaim)) return roleClaim[0];
+  return roleClaim;
+}
 
 interface AdminLayoutProps {
   children: ReactNode;
@@ -15,14 +23,16 @@ export default function AdminLayout({ children, requiredRole }: AdminLayoutProps
   const auth = useAuth0();
   console.log('Auth0 context:', auth);
   const { user, isAuthenticated, logout } = auth;
-  console.log('user data____:', user, '_______isAuthenticated:', isAuthenticated, '******requiredRole:', requiredRole);
+  const userRole = getUserRole(user);
+  console.log('user data____:', user, '_______isAuthenticated:', isAuthenticated, '******requiredRole:', requiredRole, '******userRole:', userRole);
+
   // Redirect to login if not authenticated
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
-  
+
   // Check for specific role requirement
-  if (requiredRole && user?.role !== requiredRole) {
+  if (requiredRole && userRole !== requiredRole) {
     return <Navigate to="/" replace />;
   }
 
@@ -36,7 +46,6 @@ export default function AdminLayout({ children, requiredRole }: AdminLayoutProps
       <header className="bg-primary text-primary-foreground p-4 shadow">
         <div className="container mx-auto flex justify-between items-center">
           <Link to="/" className="text-2xl font-serif font-bold">JOE's CAFFÉ</Link>
-          
           <div className="flex items-center gap-6">
             {/* Navigation */}
             <nav className="hidden md:flex items-center gap-4">
@@ -46,8 +55,7 @@ export default function AdminLayout({ children, requiredRole }: AdminLayoutProps
               >
                 <ClipboardList className="h-4 w-4" /> Orders
               </Link>
-              
-              {user?.role === 'owner' && (
+              {userRole === 'owner' && (
                 <Link 
                   to="/dashboard" 
                   className="flex items-center gap-1 px-3 py-2 rounded hover:bg-primary-foreground/10"
@@ -56,7 +64,6 @@ export default function AdminLayout({ children, requiredRole }: AdminLayoutProps
                 </Link>
               )}
             </nav>
-            
             <div className="flex items-center gap-2">
               <span className="text-sm hidden sm:inline-block">
                 <User className="h-4 w-4 inline mr-1" />
@@ -74,7 +81,6 @@ export default function AdminLayout({ children, requiredRole }: AdminLayoutProps
           </div>
         </div>
       </header>
-
       {/* Main Content */}
       <main className="flex-grow bg-background">
         {children}
