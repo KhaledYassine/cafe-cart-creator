@@ -11,7 +11,7 @@ node_modules
 dist
 dist-ssr
 *.local
-
+newer_but_not_gonna_use_it
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
